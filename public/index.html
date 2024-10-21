@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>2JG - Crear imagenes</h1>
+    <form action="/gen-image" method="post" >
+        <input type="text" name="prompt" id="prompt" />        
+    </form>
+   <!-- <h1>2JG - Crer Nombre</h1>
+    <form action="/gen-name" method="post" id="name-form" >
+        <input type="text" name="name-prompt" id="name-prompt" />        
+    </form>-->
+
+    <div id="results" ></div>
+    <script>
+
+        const form = document.querySelector('form');
+        const input = document.querySelector("#prompt")
+
+        const nameForm = document.querySelector('#name-form');
+        const nameInput = document.querySelector("#name-prompt")
+
+        form.addEventListener("submit", (e) =>{
+            e.preventDefault();
+            const data = {prompt: input.value};
+            
+            const options = {
+                method: 'POST',
+                headers : {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }
+
+            fetch('/gen-image', options)
+            .then(response => response.json())
+            .then((data) => {
+                console.log({data});
+                if (data ?.filename){
+                    const image = document.createElement('img');
+                    image.src = "/images/" + data.filename;
+                    document.querySelector("#results").appendChild(image)
+                }
+            })
+            .catch((error) =>{
+                console.log("Error retrieving image", error.message);
+            } );
+
+        })
+
+        nameForm.addEventListener("submit", (e) =>{
+            e.preventDefault();
+            const data = {prompt: nameInput.value};
+            
+            const options = {
+                method: 'POST',
+                headers : {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }
+
+            fetch('/gen-name', options)
+            .then(response => response.json())
+            .then((data) => {
+                console.log({data});
+                if (data ?.filename){
+                    const image = document.createElement('img');
+                    image.src = "/images" + data.filename;
+                    document.querySelector("#results").appendChild(image)
+                }
+            })
+            .catch((error) =>{
+                console.log("Error retrieving name", error.message);
+            } );
+
+        })
+    </script>
+
+</body>
+</html>
